@@ -21,8 +21,9 @@
 			import Stats from './jsm/libs/stats.module.js';
 
 			import { ColladaLoader } from './jsm/loaders/ColladaLoader.js';
+			import { OrbitControls } from './jsm/controls/OrbitControls.js';
 
-			var container, stats, clock;
+			var container, stats, clock , controls;
 			var camera, scene, renderer, elf;
 
 			init();
@@ -73,7 +74,16 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 
+				controls = new OrbitControls( camera, renderer.domElement );
+				controls.screenSpacePanning = true;
+				controls.minDistance = 5;
+				controls.maxDistance = 40;
+				controls.target.set( 0, 2, 0 );
+				controls.update();
+
 				//
+			
+
 
 				stats = new Stats();
 				container.appendChild( stats.dom );
@@ -108,7 +118,7 @@
 
 				if ( elf !== undefined ) {
 
-					elf.rotation.y += delta * 99;
+					elf.frustumCulled = false;
 
 				}
 
