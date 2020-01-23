@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - 3MF</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="main.css">
+		<title>thd 3MF</title>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+		/>
+		<link type="text/css" rel="stylesheet" href="main.css" />
 		<style>
 			body {
 				background-color: #333;
@@ -15,82 +18,181 @@
 		<div id="info">
 			<a href="http://threejs.org" target="_blank" rel="noopener">three.js</a>
 			<a href="http://3mf.io" target="_blank" rel="noopener">3MF File format</a>
-			<div>3MF loader test by <a href="https://github.com/technohippy" target="_blank" rel="noopener">technohippy</a></div>
-			<div>Cube gears file from <a href="https://github.com/3MFConsortium/3mf-samples" target="_blank" rel="noopener">3mf-samples</a></div>
+			<div>
+				3MF loader test by
+				<a href="https://github.com/technohippy" target="_blank" rel="noopener"
+					>technohippy</a
+				>
+			</div>
+			<div>
+				Cube gears file from
+				<a
+					href="https://github.com/3MFConsortium/3mf-samples"
+					target="_blank"
+					rel="noopener"
+					>3mf-samples</a
+				>
+			</div>
 		</div>
 
 		<script src="js/libs/jszip.min.js"></script>
 
 		<script type="module">
+			import * as THREE from "../build/three.module.js";
 
-			import * as THREE from '../build/three.module.js';
-
-			import { OrbitControls } from './jsm/controls/OrbitControls.js';
-			import { ThreeMFLoader } from './jsm/loaders/3MFLoader.js';
+			import { OrbitControls } from "./jsm/controls/OrbitControls.js";
+			import { ThreeMFLoader } from "./jsm/loaders/3MFLoader.js";
 
 			var camera, scene, renderer;
+			var mesh, spriteLabel;
+			var   material, stats;
 
 			init();
 
 			function init() {
-
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				document.body.appendChild( renderer.domElement );
+				renderer = new THREE.WebGLRenderer({ antialias: true });
+				renderer.setPixelRatio(window.devicePixelRatio);
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
 
 				scene = new THREE.Scene();
-				scene.background = new THREE.Color( 0x333333 );
+				scene.background = new THREE.Color(0x333333);
 
-				scene.add( new THREE.AmbientLight( 0xffffff, 0.2 ) );
+				scene.add(new THREE.AmbientLight(0xffffff, 0.2));
 
-				camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 500 );
+				camera = new THREE.PerspectiveCamera(
+					35,
+					window.innerWidth / window.innerHeight,
+					1,
+					500
+				);
 
 				// Z is up for objects intended to be 3D printed.
 
-				camera.up.set( 0, 0, 1 );
-				camera.position.set( - 80, - 90, 150 );
-				scene.add( camera );
+				camera.up.set(0, 0, 1);
+				camera.position.set(-80, -90, 150);
+				scene.add(camera);
 
-				var controls = new OrbitControls( camera, renderer.domElement );
-				controls.addEventListener( 'change', render );
+				var controls = new OrbitControls(camera, renderer.domElement);
+				controls.addEventListener("change", render);
 				controls.minDistance = 50;
 				controls.maxDistance = 300;
 				controls.enablePan = false;
-				controls.target.set( 80, 65, 20 );
+				controls.target.set(80, 65, 20);
 				controls.update();
 
-				var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
-				camera.add( pointLight );
+				var pointLight = new THREE.PointLight(0xffffff, 0.8);
+				camera.add(pointLight);
 				var loader = new ThreeMFLoader();
-				loader.load( './models/3mf/cube_gears.3mf', function ( object ) {
-
-					scene.add( object );
+				loader.load("./models/3mf/cube_gears.3mf", function(object) {
+					scene.add(object);
 					render();
+				});
 
-				} );
-
-				window.addEventListener( 'resize', onWindowResize, false );
-
+				window.addEventListener("resize", onWindowResize, false);
 			}
 
-			function onWindowResize() {
+			var spritey = makeTextSprite(" ชอบหี ", {
+				fontsize: 44,
+				textColor: { r: 255, g: 255, b: 255, a: 1.0 }
+			});
+			spritey.position.set(20, 150, 100);
+			scene.add(spritey);
 
+			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 
-				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setSize(window.innerWidth, window.innerHeight);
 
 				render();
+			}
 
+			// load the GIF texture
+			var textureLoader = new THREE.TextureLoader().load(
+				"/examples/models/3mf/dance.gif"
+			);
+			// Create material
+			material = new THREE.MeshBasicMaterial({
+				map: textureLoader
+			});
+			var geometry = new THREE.BoxGeometry(100, 100, 100);
+			mesh = new THREE.Mesh(geometry, material);
+			scene.add(mesh);
+
+
+
+			function makeTextSprite(message, parameters) {
+				if (parameters === undefined) parameters = {};
+				var fontface = parameters.hasOwnProperty("fontface")
+					? parameters["fontface"]
+					: "Courier New";
+				var fontsize = parameters.hasOwnProperty("fontsize")
+					? parameters["fontsize"]
+					: 18;
+				var borderThickness = parameters.hasOwnProperty("borderThickness")
+					? parameters["borderThickness"]
+					: 4;
+				var borderColor = parameters.hasOwnProperty("borderColor")
+					? parameters["borderColor"]
+					: { r: 0, g: 0, b: 0, a: 1.0 };
+				var backgroundColor = parameters.hasOwnProperty("backgroundColor")
+					? parameters["backgroundColor"]
+					: { r: 0, g: 0, b: 255, a: 1.0 };
+				var textColor = parameters.hasOwnProperty("textColor")
+					? parameters["textColor"]
+					: { r: 0, g: 0, b: 0, a: 1.0 };
+
+				var canvas = document.createElement("canvas");
+				var context = canvas.getContext("2d");
+				context.font = "Bold " + fontsize + "px " + fontface;
+				var metrics = context.measureText(message);
+				var textWidth = metrics.width;
+
+				context.fillStyle =
+					"rgba(" +
+					backgroundColor.r +
+					"," +
+					backgroundColor.g +
+					"," +
+					backgroundColor.b +
+					"," +
+					backgroundColor.a +
+					")";
+				context.strokeStyle =
+					"rgba(" +
+					borderColor.r +
+					"," +
+					borderColor.g +
+					"," +
+					borderColor.b +
+					"," +
+					borderColor.a +
+					")";
+				context.fillStyle =
+					"rgba(" +
+					textColor.r +
+					", " +
+					textColor.g +
+					", " +
+					textColor.b +
+					", 1.0)";
+				context.fillText(message, borderThickness, fontsize + borderThickness);
+
+				var texture = new THREE.Texture(canvas);
+				texture.needsUpdate = true;
+				var spriteMaterial = new THREE.SpriteMaterial({
+					map: texture,
+					useScreenCoordinates: false
+				});
+				var sprite = new THREE.Sprite(spriteMaterial);
+				sprite.scale.set(0.5 * fontsize, 0.25 * fontsize, 0.75 * fontsize);
+				return sprite;
 			}
 
 			function render() {
-
-				renderer.render( scene, camera );
-
+				renderer.render(scene, camera);
 			}
-
 		</script>
 	</body>
 </html>
