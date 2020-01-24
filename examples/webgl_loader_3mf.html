@@ -15,37 +15,26 @@
 		</style>
 	</head>
 	<body>
-		<div id="info">
-			<!-- <a href="http://threejs.org" target="_blank" rel="noopener">three.js</a>
-			<a href="http://3mf.io" target="_blank" rel="noopener">3MF File format</a>
-			<div>
-				3MF loader test by
-				<a href="https://github.com/technohippy" target="_blank" rel="noopener"
-					>technohippy</a
-				>
-			</div>
-			<div>
-				Cube gears file from
-				<a
-					href="https://github.com/3MFConsortium/3mf-samples"
-					target="_blank"
-					rel="noopener"
-					>3mf-samples</a
-				>
-			</div> -->
-		</div>
+		<div id="info"></div>
 
 		<script src="js/libs/jszip.min.js"></script>
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script> -->
+
+
+		<!-- import axios from '/node_modules/axios'; -->
 
 		<script type="module">
 			import * as THREE from "../build/three.module.js";
+			import axios from './axios.js'
 
+		
+			// import axios from '../node_modules/axios/dist/axios.js';
 			import { OrbitControls } from "./jsm/controls/OrbitControls.js";
 			import { ThreeMFLoader } from "./jsm/loaders/3MFLoader.js";
 
 			var camera, scene, renderer;
 			var mesh, spriteLabel;
-			var   material, stats;
+			var material, stats;
 
 			init();
 
@@ -61,7 +50,7 @@
 				scene.add(new THREE.AmbientLight(0xffffff, 0.2));
 
 				camera = new THREE.PerspectiveCamera(
-					35,
+					60,
 					window.innerWidth / window.innerHeight,
 					1,
 					500
@@ -69,8 +58,8 @@
 
 				// Z is up for objects intended to be 3D printed.
 
-				camera.up.set(0, 0, 1);
-				camera.position.set(-80, -90, 300);
+				camera.up.set(0, 0, 0);
+				camera.position.set(-60, 100, 300);
 				scene.add(camera);
 
 				var controls = new OrbitControls(camera, renderer.domElement);
@@ -78,7 +67,7 @@
 				controls.minDistance = 50;
 				controls.maxDistance = 300;
 				controls.enablePan = true;
-				controls.target.set(80, 65, 20);
+				controls.target.set(0, 0, 0);
 				controls.update();
 
 				var pointLight = new THREE.PointLight(0xffffff, 0.8);
@@ -92,11 +81,11 @@
 				window.addEventListener("resize", onWindowResize, false);
 			}
 
-			var spritey = makeTextSprite("31 องศา ", {
-				fontsize: 44,
+			var spritey = makeTextSprite("32 องศา ", {
+				fontsize: 	70,
 				textColor: { r: 255, g: 255, b: 255, a: 1.0 }
 			});
-			spritey.position.set(5, 150, 100);
+			spritey.position.set(5, 40, 40);
 			scene.add(spritey);
 
 			function onWindowResize() {
@@ -119,8 +108,6 @@
 			// var geometry = new THREE.BoxGeometry(100, 100, 100);
 			// mesh = new THREE.Mesh(geometry, material);
 			// scene.add(mesh);
-
-
 
 			function makeTextSprite(message, parameters) {
 				if (parameters === undefined) parameters = {};
@@ -193,6 +180,15 @@
 			function render() {
 				renderer.render(scene, camera);
 			}
+
+			const url = "10.222.47.134:8086/query?db=testtemp";
+
+			const options = {
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded"
+				}
+			};
+		
 		</script>
 	</body>
 </html>
