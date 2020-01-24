@@ -15,17 +15,21 @@
 		</style>
 	</head>
 	<body>
-		<div id="info"></div>
+		<div id="info">
+			{{info}}
+		</div>
 
 		<script src="js/libs/jszip.min.js"></script>
-		<script src ="/node_modules/axios/dist/axios.min.js"></script>
-	
-		<script src ="/node_modules/react/umd/react.development.js"></script>
+		<script src="/node_modules/axios/dist/axios.min.js"></script>
 
-		<script type="่text/javascript" src="../node_modules/influx-api/lib/index.js.map"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+		<script
+			type="่text/javascript"
+			src="../node_modules/influx-api/lib/index.js.map"
+		></script>
 
 		<script type="module">
-
 			import * as THREE from "../build/three.module.js";
 
 			import { OrbitControls } from "./jsm/controls/OrbitControls.js";
@@ -80,7 +84,7 @@
 				window.addEventListener("resize", onWindowResize, false);
 			}
 
-			var spritey = makeTextSprite("32 องศา ", {
+			var spritey = makeTextSprite( {info} , {
 				fontsize: 70,
 				textColor: { r: 255, g: 255, b: 255, a: 1.0 }
 			});
@@ -96,17 +100,17 @@
 				render();
 			}
 
-			// load the GIF texture
-			var textureLoader = new THREE.TextureLoader().load(
-				"/examples/models/3mf/dance.gif"
-			);
-			// Create material
-			material = new THREE.MeshBasicMaterial({
-				map: textureLoader
-			});
-			var geometry = new THREE.BoxGeometry(100, 100, 100);
-			mesh = new THREE.Mesh(geometry, material);
-			scene.add(mesh);
+			// // load the GIF texture
+			// var textureLoader = new THREE.TextureLoader().load(
+			// 	"/examples/models/3mf/dance.gif"
+			// );
+			// // Create material
+			// material = new THREE.MeshBasicMaterial({
+			// 	map: textureLoader
+			// });
+			// var geometry = new THREE.BoxGeometry(100, 100, 100);
+			// mesh = new THREE.Mesh(geometry, material);
+			// scene.add(mesh);
 
 			function makeTextSprite(message, parameters) {
 				if (parameters === undefined) parameters = {};
@@ -181,21 +185,50 @@
 			}
 
 			// Dummy Url.
-			const url = "http://10.222.43.12:8086/query?db=testtemp&q=select value from cpu_temp_load where host = 'jetson01'  order by time desc limit 10";
+			const url =
+				"http://10.222.43.12:8086/query?db=testtemp&q=select value from cpu_temp_load where host = 'jetson01'  order by time desc limit 2";
 			const options = {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
 				}
 			};
+
 			// Axios Test.
 			const axiosTest = axios.get;
 
 			// Axios Test Data.
-			axiosTest(url,options).then(function(axiosTestResult) {
-				console.log("response.JSON:", {
-					message: "Request received",
-					data: axiosTestResult.data
-				});
+			axiosTest(url, options).then(function(axiosTestResult) {
+				console.log({ data: axiosTestResult.data.results });
+
+				const res_data = axiosTestResult.data;
+
+				console.warn(res_data);
+			});
+
+			new Vue({
+				el: "#info",
+				data() {
+					return {
+						info: null
+					};
+				},
+				mounted() {
+					axios
+						.get(
+							"http://10.222.43.12:8086/query?db=testtemp&q=select value from cpu_temp_load where host = 'jetson01'  order by time desc limit 1"
+						)
+						.then(
+							response =>
+								(this.info = response.data.results[0].series[0].values[0][1])
+						
+						
+						);
+
+						this.state = info;
+						console.log(info);
+
+				
+				}
 			});
 		</script>
 	</body>
