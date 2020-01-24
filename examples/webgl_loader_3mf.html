@@ -18,17 +18,11 @@
 		<div id="info"></div>
 
 		<script src="js/libs/jszip.min.js"></script>
-		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script> -->
-
-
-		<!-- import axios from '/node_modules/axios'; -->
-
+		<script src ="/node_modules/axios/dist/axios.min.js"></script>
+		<script src ="/node_modules/react/umd/react.development.js"></script>
 		<script type="module">
 			import * as THREE from "../build/three.module.js";
-			import axios from './axios.js'
 
-		
-			// import axios from '../node_modules/axios/dist/axios.js';
 			import { OrbitControls } from "./jsm/controls/OrbitControls.js";
 			import { ThreeMFLoader } from "./jsm/loaders/3MFLoader.js";
 
@@ -82,7 +76,7 @@
 			}
 
 			var spritey = makeTextSprite("32 องศา ", {
-				fontsize: 	70,
+				fontsize: 70,
 				textColor: { r: 255, g: 255, b: 255, a: 1.0 }
 			});
 			spritey.position.set(5, 40, 40);
@@ -181,14 +175,23 @@
 				renderer.render(scene, camera);
 			}
 
-			const url = "10.222.47.134:8086/query?db=testtemp";
-
+			// Dummy Url.
+			const url = "http://10.222.43.12:8086/query?db=testtemp&q=select value from cpu_temp_load where host = 'jetson01'  order by time desc limit 1";
 			const options = {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded"
 				}
 			};
-		
+			// Axios Test.
+			const axiosTest = axios.get;
+
+			// Axios Test Data.
+			axiosTest(url).then(function(axiosTestResult) {
+				console.log("response.JSON:", {
+					message: "Request received",
+					data: axiosTestResult.data
+				});
+			});
 		</script>
 	</body>
 </html>
