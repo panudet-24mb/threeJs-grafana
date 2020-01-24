@@ -84,6 +84,22 @@
 				window.addEventListener("resize", onWindowResize, false);
 			}
 
+
+			var spritey_1 = makeTextSprite(
+						"2",
+					{
+						fontsize: 90,
+						textColor: { r: 255, g: 255, b: 255, a: 1.0 }
+					}
+				);
+				spritey_1.position.set(5, 40, 40);
+				spritey_1.matrixAutoUpdate = true;
+				// material.needsUpdate=true;
+			
+				scene.add(spritey_1);
+
+
+
 			const getBreeds = async () => {
 				try {
 					return await axios.get(
@@ -98,26 +114,42 @@
 				const breeds = await getBreeds();
 
 				if (breeds) {
-					console.log("ok");
-				}
+					console.log('count breeds');
+					scene.remove(spritey_1 );
+					scene.remove(spritey_2);
 
-				var spritey = makeTextSprite(
-					breeds.data.results[0].series[0].values[0][1],
+
+					var spritey_2 = makeTextSprite(
+						breeds.data.results[0].series[0].values[0][1],
 					{
 						fontsize: 90,
 						textColor: { r: 255, g: 255, b: 255, a: 1.0 }
 					}
 				);
-				spritey.position.set(5, 40, 40);
-				scene.add(spritey);
+				spritey_2.position.set(5, 40, 40);
+				spritey_2.matrixAutoUpdate = true;
+				// material.needsUpdate=true;
+			
+				scene.add(spritey_2);
 			};
 
-			countBreeds();
+			
+		}
+			var myVar,update;
+		
+			function mycount() {
+					update = setInterval(countBreeds, 6000);
+					console.log("countbreed");
+				}
+		
+			function myFunction() {
+				myVar = setInterval(getBreeds, 4000);
+				console.log("getbreed");
+			}
 
-	
+			mycount(); myFunction();
 
-
-
+		
 
 			// var spritey = makeTextSprite(`Got ${Object.entries(breeds.data.message).length} breeds`, {
 			// 	fontsize: 20,
