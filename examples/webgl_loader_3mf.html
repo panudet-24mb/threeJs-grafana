@@ -84,12 +84,47 @@
 				window.addEventListener("resize", onWindowResize, false);
 			}
 
-			var spritey = makeTextSprite( {info} , {
-				fontsize: 70,
-				textColor: { r: 255, g: 255, b: 255, a: 1.0 }
-			});
-			spritey.position.set(5, 40, 40);
-			scene.add(spritey);
+			const getBreeds = async () => {
+				try {
+					return await axios.get(
+						"http://10.222.43.12:8086/query?db=testtemp&q=select value from cpu_temp_load where host = 'jetson01'  order by time desc limit 1"
+					);
+				} catch (error) {
+					console.error(error);
+				}
+			};
+
+			const countBreeds = async () => {
+				const breeds = await getBreeds();
+
+				if (breeds) {
+					console.log("ok");
+				}
+
+				var spritey = makeTextSprite(
+					breeds.data.results[0].series[0].values[0][1],
+					{
+						fontsize: 90,
+						textColor: { r: 255, g: 255, b: 255, a: 1.0 }
+					}
+				);
+				spritey.position.set(5, 40, 40);
+				scene.add(spritey);
+			};
+
+			countBreeds();
+
+	
+
+
+
+
+			// var spritey = makeTextSprite(`Got ${Object.entries(breeds.data.message).length} breeds`, {
+			// 	fontsize: 20,
+			// 	textColor: { r: 255, g: 255, b: 255, a: 1.0 }
+			// });
+			// spritey.position.set(5, 40, 40);
+			// scene.add(spritey);
 
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
@@ -212,6 +247,11 @@
 						info: null
 					};
 				},
+				computed: {
+					passed_data: function() {
+						return this.info;
+					}
+				},
 				mounted() {
 					axios
 						.get(
@@ -220,14 +260,10 @@
 						.then(
 							response =>
 								(this.info = response.data.results[0].series[0].values[0][1])
-						
-						
 						);
 
-						this.state = info;
-						console.log(info);
-
-				
+					this.state = info;
+					console.log(info);
 				}
 			});
 		</script>
