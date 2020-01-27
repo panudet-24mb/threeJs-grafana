@@ -19,9 +19,16 @@
 			{{info}}
 		</div>
 
+		<div id ="App" >
+					<App/>
+
+
+		</div>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 		<script src="js/libs/jszip.min.js"></script>
 		<script src="/node_modules/axios/dist/axios.min.js"></script>
-
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 		<script
@@ -30,7 +37,7 @@
 		></script>
 
 		<script type="module">
-			import * as THREE from "../build/three.module.js";
+			import * as THREE from '../build/three.module.js';
 
 			import { OrbitControls } from "./jsm/controls/OrbitControls.js";
 			import { ThreeMFLoader } from "./jsm/loaders/3MFLoader.js";
@@ -298,6 +305,30 @@
 					console.log(info);
 				}
 			});
+
+
+
 		</script>
+
+<!-- REACT ---- HERE  ONLY ---------------- -->
+<script type ="text/babel">
+
+	class App extends React.Component{
+		render(){
+			return(
+				<div className = "app-content">
+					<h1>test </h1>
+					<p> { Math.random() * 10}</p>
+				</div>
+			)
+		}
+	}
+
+	ReactDOM.render(<App /> , document.getElementById('App'));
+
+
+
+</script>
+
 	</body>
 </html>
