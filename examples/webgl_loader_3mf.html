@@ -131,14 +131,17 @@
 	
 
 					if(a == 0 ){
-
+						
 						createText(data);
+						
+						renderer.render(scene, camera);
+						
 						a = 1;
 
 					}else if ( a == 1){ // กรณีสร้าง
 
 						refreshText();
-						
+						renderer.render(scene, camera);
 						a = 0;
 
 					}
@@ -169,7 +172,7 @@
 					if ( ! text ) return;
 						createText();
 						console.warn('201');
-
+				
 
 
 				}
@@ -181,7 +184,7 @@
 					data_temp,
 				{
 					fontsize: 90,
-					textColor: { r: 255, g: 255, b: 255, a: 1.0 }
+					textColor: { r: 255, g: 0, b: 0, a: 1.0 }
 				}
 				);
 				text_result.position.set(5, 40, 40);
@@ -189,7 +192,7 @@
 				scene.add(text_result);
 				scene.updateMatrix(text_result);
 				camera.updateProjectionMatrix();
-				console.log("added");
+				console.info("added");
 			
 				}
 
@@ -197,16 +200,17 @@
 				var myVar,update;
 
 				function mycount() {
-				update = setInterval(countBreeds, 2000);
+				update = setInterval(countBreeds, 6000);
 				console.log("countbreed");
 				}
 
 				function myFunction() {
-				myVar = setInterval(getBreeds, 1000);
+				myVar = setInterval(getBreeds, 5000);
 				console.log("getbreed");
 				}
 
-				mycount(); myFunction()
+				mycount();
+				 myFunction();
 
 
 			function onWindowResize() {
@@ -342,6 +346,8 @@
 				}
 			});
 
+
+			
 
 
 		</script>
