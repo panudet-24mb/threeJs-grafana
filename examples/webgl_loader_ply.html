@@ -59,7 +59,7 @@
 				// PLY file
 
 				var loader = new PLYLoader();
-				loader.load( './models/ply/ascii/dolphins.ply', function ( geometry ) {
+				loader.load( './models/ply/ok.ply', function ( geometry ) {
 
 					geometry.computeVertexNormals();
 
@@ -68,8 +68,8 @@
 
 					mesh.position.y = - 0.2;
 					mesh.position.z = 0.3;
-					mesh.rotation.x = - Math.PI / 2;
-					mesh.scale.multiplyScalar( 0.001 );
+					// mesh.rotation.x = - Math.PI / 2;
+					mesh.scale.multiplyScalar( 0.8 );
 
 					mesh.castShadow = true;
 					mesh.receiveShadow = true;
@@ -78,24 +78,24 @@
 
 				} );
 
-				loader.load( './models/ply/binary/Lucy100k.ply', function ( geometry ) {
+				// loader.load( './models/ply/binary/Lucy100k.ply', function ( geometry ) {
 
-					geometry.computeVertexNormals();
+				// 	geometry.computeVertexNormals();
 
-					var material = new THREE.MeshStandardMaterial( { color: 0x0055ff, flatShading: true } );
-					var mesh = new THREE.Mesh( geometry, material );
+				// 	var material = new THREE.MeshStandardMaterial( { color: 0x0055ff, flatShading: true } );
+				// 	var mesh = new THREE.Mesh( geometry, material );
 
-					mesh.position.x = - 0.2;
-					mesh.position.y = - 0.02;
-					mesh.position.z = - 0.2;
-					mesh.scale.multiplyScalar( 0.0006 );
+				// 	mesh.position.x = - 0.2;
+				// 	mesh.position.y = - 0.02;
+				// 	mesh.position.z = - 0.2;
+				// 	mesh.scale.multiplyScalar( 0.0006 );
 
-					mesh.castShadow = true;
-					mesh.receiveShadow = true;
+				// 	mesh.castShadow = true;
+				// 	mesh.receiveShadow = true;
 
-					scene.add( mesh );
+				// 	scene.add( mesh );
 
-				} );
+				// } );
 
 				// Lights
 

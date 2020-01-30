@@ -24,6 +24,8 @@
 
 		</div>
 
+		<div id='chart-container'></div>
+
 		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 		<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
 		<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
@@ -32,19 +34,30 @@
 		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.2.1/fabric.min.js"></script>
 
+		<!-- Including the fusioncharts core library -->
+		<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+		<!-- Including the fusioncharts library to render charts -->
+		<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.charts.js"></script>
+		<!-- Including react-fusioncharts component -->
+		<script type="text/javascript" src="https://unpkg.com/react-fusioncharts@2.0.1/dist/react-fusioncharts.min.js"></script>
+		<!-- Including the fusion theme -->
+		<script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+
 	
 		<script
 			type="่text/javascript"
 			src="../node_modules/influx-api/lib/index.js.map"
-	
+			src="../node_modules/react-gauge-chart/dist/index.js"
+			src="../node_modules/react-gauge-chart/dist/GaugeChart/index.js"
+
 		></script>
 
 		<script type="module">
 			import * as THREE from '../build/three.module.js';
 
 			import { OrbitControls } from "./jsm/controls/OrbitControls.js";
-			import { ThreeMFLoader } from "./jsm/loaders/3MFLoader.js";
-
+			// import { ThreeMFLoader } from "./jsm/loaders/3MFLoader.js";
+			import { PLYLoader } from './jsm/loaders/PLYLoader.js';
 
 			var camera, scene, renderer;
 			var mesh, spriteLabel;
@@ -90,11 +103,34 @@
 
 				var pointLight = new THREE.PointLight(0xffffff, 0.8);
 				camera.add(pointLight);
-				var loader = new ThreeMFLoader();
-				loader.load("./models/3mf/Assem1.3mf", function(object) {
-					scene.add(object);
-					render();
-				});
+
+				var loader = new PLYLoader();
+				loader.load( './models/ply/ok.ply', function ( geometry ) {
+
+					geometry.computeVertexNormals();
+
+					var material = new THREE.MeshStandardMaterial( { color: 0x0055ff, flatShading: true } );
+					var mesh = new THREE.Mesh( geometry, material );
+
+					mesh.position.y = - 0.2;
+					mesh.position.z = 0.3;
+					// mesh.rotation.x = - Math.PI / 2;
+					mesh.scale.multiplyScalar( 99 );
+
+					mesh.castShadow = true;
+					mesh.receiveShadow = true;
+
+					scene.add( mesh );
+
+				} );
+
+
+
+				// var loader = new ThreeMFLoader();
+				// loader.load("./models/3mf/Assem1.3mf", function(object) {
+				// 	scene.add(object);
+				// 	render();
+				// });
 
 				window.addEventListener("resize", onWindowResize, false);
 			}
@@ -358,14 +394,69 @@
 	class App extends React.Component{
 		render(){
 			return (
+
+				
 				<div className ="app-content">
-				<h1> love prayuth react </h1></div>
+				
+				
+				
+				</div>
 			)
 		}
 	}
 
 	ReactDOM.render(<App />, document.getElementById('app'));
 </script>
+
+<script type="text/jsx">
+    ReactFC.fcRoot(FusionCharts);
+    const chartConfigs = {
+        type: 'angulargauge',
+        renderAt: 'chart-container',
+        width: '450',
+        height: '250',
+        dataFormat: 'json',
+        dataSource: {
+            // Chart Configuration
+            "chart": {
+                "caption": "Nordstrom's Customer Satisfaction Score for 2017",
+                "lowerLimit": "0",
+                "upperLimit": "100",
+                "showValue": "1",
+                "numberSuffix": "%",
+                "theme": "fusion",
+                "showToolTip": "0"
+            },
+            // Chart Data
+            "colorRange": {
+                "color": [{
+                    "minValue": "0",
+                    "maxValue": "50",
+                    "code": "#F2726F"
+                }, {
+                    "minValue": "50",
+                    "maxValue": "75",
+                    "code": "#FFC533"
+                }, {
+                    "minValue": "75",
+                    "maxValue": "100",
+                    "code": "#62B58F"
+                }]
+            },
+            "dials": {
+                "dial": [{
+                    "value": "81"
+                }]
+            }
+        }
+    };
+    </script>
+    <script type="text/jsx">
+    ReactDOM.render(
+        <ReactFC {...chartConfigs} />,
+        document.getElementById('chart-container')
+    );
+    </script>
 
 	</body>
 </html>
