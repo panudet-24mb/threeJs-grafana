@@ -100,7 +100,7 @@
   },
   "dependencies": {
     "@seregpie/three.text-sprite": "^2.0.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "express": "^4.17.1",
     "influx": "^5.5.1",
     "influx-api": "^0.1.4",
